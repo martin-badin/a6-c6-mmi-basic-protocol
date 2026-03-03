@@ -1,0 +1,86 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Upload CSV</title>
+  </head>
+  <body>
+    <input type="file" id="fileInput" accept=".csv" />
+    <canvas id="canvas"></canvas>
+
+    <!-- external helpers for Command 31 -->
+    <script src="command31.js"></script>
+    <script src="command04.js"></script>
+    <script src="command39.js"></script>
+
+    <script>
+      /**
+       * Parses the CSV text and returns an array of lines that start with
+       * "0x04", "0x31", or "0x39". It also removes quotes, "from," and "to,"
+       * and replaces commas with spaces.
+       *
+       * @param {string} text - The CSV text to parse.
+       * @returns {string[][]} An array of parsed lines from the CSV.
+       */
+      const parseCSV = (text) => {
+        const lines = text.split("\n");
+
+        return lines
+          .slice(1)
+          .map((line) =>
+            line
+              .replace(/"/g, "")
+              .replace(/(from,|to,)/g, "")
+              .replace(/,/g, " ")
+              .trim(),
+          )
+          .map((line) => line.split(" "));
+      };
+
+      document
+        .getElementById("fileInput")
+        .addEventListener("change", (event) => {
+          const file = event.target.files[0];
+          if (!file) return;
+
+          const reader = new FileReader();
+          const canvas = document.getElementById("canvas");
+
+          reader.onload = function (e) {
+            parseCSV(e.target.result).forEach((frame, index) => {
+              setTimeout(() => {
+                const id = frame[0];
+                if (id === "0x04") {
+                  // Command 04 resets/defines display size -> clear and set background
+                  renderCommand04(frame, canvas, { scale: 3 });
+                  console.log(
+                    "Processed Command 04 (display size) in frame:",
+                    frame,
+                  );
+                } else if (id === "0x31") {
+                  // draw pixel blocks (prefer external parser/renderer)
+                  renderCommand31(frame, canvas, { scale: 3 });
+
+                  console.log(
+                    "Processed Command 31 (pixel blocks) in frame:",
+                    frame,
+                  );
+                } else if (id === "0x39") {
+                  // fill/clear rectangles
+                  renderCommand39(frame, canvas, { scale: 3 });
+                  console.log(
+                    "Processed Command 39 (fill/clear rectangles) in frame:",
+                    frame,
+                  );
+                } else {
+                  console.warn("Unknown command ID:", id, "in frame:", frame);
+                }
+              }, index * 50);
+            });
+          };
+
+          reader.readAsText(file);
+        });
+    </script>
+  </body>
+</html>
