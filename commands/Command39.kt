@@ -28,6 +28,7 @@ import com.mbadin.mmibasic.CommandModel
 
 @ExperimentalUnsignedTypes
 class Command39(data: UByteArray) : CommandModel(0x39.toUByte(), data) {
+
     /**
      * 0x00 - red color
      * 0x02 - black color
@@ -36,13 +37,49 @@ class Command39(data: UByteArray) : CommandModel(0x39.toUByte(), data) {
         return getData()[2]
     }
 
-    // [x, y]
-    fun getCoords(): Array<UByte> {
-        return arrayOf(getData()[3], getData()[4])
+    /** [x, y] */
+    fun getCoords(): Pair<UByte, UByte> {
+        val data = getData()
+        return data[3] to data[4]
     }
 
-    // [height, width]
-    fun getSize(): Array<UByte> {
-        return arrayOf(getData()[5], getData()[6])
+    /** [height, width] */
+    fun getSize(): Pair<UByte, UByte> {
+        val data = getData()
+        return data[5] to data[6]
+    }
+
+    /**
+     * Render command using provided pixel sink.
+     */
+    fun render(
+        setPixel: (x: Int, y: Int, color: Int) -> Unit
+    ): Int {
+
+        val (xByte, yByte) = getCoords()
+        val (heightByte, widthByte) = getSize()
+
+        val x = xByte.toInt()
+        val y = yByte.toInt()
+        val height = heightByte.toInt()
+        val width = widthByte.toInt()
+
+        val colorType = getColorType().toInt()
+
+        val color = when (colorType) {
+            0x00 -> Color.RED
+            0x02 -> Color.BLACK
+            else -> return Errors.UNKNOWN
+        }
+
+        for (row in 0 until height) {
+            for (column in 0 until width) {
+                val xPos = x + column
+                val yPos = y + row
+                setPixel(xPos, yPos, color)
+            }
+        }
+
+        return Errors.NO_ERROR
     }
 }

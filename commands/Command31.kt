@@ -27,39 +27,78 @@ import com.mbadin.mmibasic.toBinary
 
 @ExperimentalUnsignedTypes
 class Command31(data: UByteArray) : CommandModel(0x31.toUByte(), data) {
+
     /**
      * 0x00 - both colors
      * 0x01 - red color if bit is 1
-     * 0x02 - red color if bit is 0
+     * 0x02 - black color if bit is 1
      */
     fun getColorType(): UByte {
         return getData()[2]
     }
 
-    // [x, y]
-    fun getCoords(): Array<UByte> {
-        return arrayOf(getData()[3], getData()[4])
+    /** [x, y] */
+    fun getCoords(): Pair<UByte, UByte> {
+        val data = getData()
+        return data[3] to data[4]
     }
 
-    // [height, width]
-    fun getSize(): Array<UByte> {
-        return arrayOf(getData()[5], getData()[6])
+    /** [height, width] */
+    fun getSize(): Pair<UByte, UByte> {
+        val data = getData()
+        return data[5] to data[6]
     }
 
     fun getBytes(): List<String> {
-        val width = getSize()[1]
+        val data = getData()
+        val (_, widthByte) = getSize()
+        val width = widthByte.toInt()
 
-        val bytes = getData().copyOfRange(7, getData().count() - 1)
+        val bytes = data.copyOfRange(7, data.size - 1)
+        val count = bytes.size / width
 
-        val count = bytes.count() / width.toInt()
-
-        return Array(width.toInt()) { it }.map { index ->
-            val start = count * index
+        return List(width) { column ->
+            val start = column * count
             val end = start + count
 
-            bytes
-                .copyOfRange(start, end)
+            bytes.copyOfRange(start, end)
                 .joinToString("") { it.toBinary().reversed() }
+        }
+    }
+
+    /**
+     * Render command using provided pixel sink.
+     */
+    fun render(
+        setPixel: (x: Int, y: Int, color: Int) -> Unit
+    ) {
+        val (xByte, yByte) = getCoords()
+        val x = xByte.toInt()
+        val y = yByte.toInt()
+
+        val bytes = getBytes()
+        val type = getColorType().toInt()
+
+        bytes.forEachIndexed { column, bitString ->
+            bitString.forEachIndexed { row, ch ->
+                val xPos = x + column
+                val yPos = y + row
+
+                when (type) {
+                    0x00 -> {
+                        if (ch == '1') setPixel(xPos, yPos, Color.RED)
+                        else setPixel(xPos, yPos, Color.BLACK)
+                    }
+
+                    0x01 -> {
+                        if (ch == '1') setPixel(xPos, yPos, Color.RED)
+                    }
+
+                    0x02 -> {
+                        if (ch == '1') setPixel(xPos, yPos, Color.BLACK)
+                    }
+                }
+            }
         }
     }
 }
