@@ -43,7 +43,7 @@ function renderCommand31(frame, canvas, opts = {}) {
   const height = data[5];
   const width = data[6];
 
-  const bytes = data.slice(7, data.length - 1); // exclude final CRC-like byte
+  const bytes = data.slice(7, data.length - 1); // exclude final PLC-like byte
 
   // number of byte-rows per column
   const count = Math.floor(bytes.length / width) || 0;

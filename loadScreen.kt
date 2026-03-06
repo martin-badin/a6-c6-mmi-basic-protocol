@@ -1,7 +1,7 @@
 package com.mbadin.mmibasic
 
-import com.mbadin.mmibasic.CanFrame.Companion.computeCRC
-import com.mbadin.mmibasic.CanFrame.Companion.computeControlByte
+import com.mbadin.mmibasic.CanFrame.Companion.computePayloadLengthCheksum
+import com.mbadin.mmibasic.CanFrame.Companion.computeFrameLengthChceksum
 import com.mbadin.mmibasic.commands.Command31
 import com.mbadin.mmibasic.commands.Command39
 
@@ -129,10 +129,10 @@ fun loadScreen(): Array<CommandModel> {
     val lineData2 = intArrayOf(0x03, 0x01, 0x00, 0x00, 41, 0x01, offset + mmiCount).map { it.toUByte() }.toUByteArray()
     val mmiData = intArrayOf(0x04, 0x01, 0x00, offset, 41 + 2 + 1, 0x08, mmiCount).plus(mmi).map { it.toUByte() }.toUByteArray()
 
-    val controlByte1 = computeControlByte(ubyteArrayOf(0x31.toUByte(), (audiData.count() + 1).toUByte(), computeCRC((audiData.count() + 1).toUByte())).plus(audiData))
-    val controlByte2 = computeControlByte(ubyteArrayOf(0x39.toUByte(), (lineData1.count() + 1).toUByte(), computeCRC((lineData1.count() + 1).toUByte())).plus(lineData1))
-    val controlByte3 = computeControlByte(ubyteArrayOf(0x39.toUByte(), (lineData2.count() + 1).toUByte(), computeCRC((lineData2.count() + 1).toUByte())).plus(lineData2))
-    val controlByte4 = computeControlByte(ubyteArrayOf(0x31.toUByte(), (mmiData.count() + 1).toUByte(), computeCRC((mmiData.count() + 1).toUByte())).plus(mmiData))
+    val controlByte1 = computeFrameLengthChceksum(ubyteArrayOf(0x31.toUByte(), (audiData.count() + 1).toUByte(), computePayloadLengthCheksum((audiData.count() + 1).toUByte())).plus(audiData))
+    val controlByte2 = computeFrameLengthChceksum(ubyteArrayOf(0x39.toUByte(), (lineData1.count() + 1).toUByte(), computePayloadLengthCheksum((lineData1.count() + 1).toUByte())).plus(lineData1))
+    val controlByte3 = computeFrameLengthChceksum(ubyteArrayOf(0x39.toUByte(), (lineData2.count() + 1).toUByte(), computePayloadLengthCheksum((lineData2.count() + 1).toUByte())).plus(lineData2))
+    val controlByte4 = computeFrameLengthChceksum(ubyteArrayOf(0x31.toUByte(), (mmiData.count() + 1).toUByte(), computePayloadLengthCheksum((mmiData.count() + 1).toUByte())).plus(mmiData))
 
     return arrayOf(
         Command31(audiData.plus(controlByte1)),

@@ -1,29 +1,30 @@
 package com.mbadin.mmibasic
 
-import com.mbadin.mmibasic.CanFrame.Companion.computeControlByte
+import com.mbadin.mmibasic.CanFrame.Companion.computeFrameLengthChceksum
+import com.mbadin.mmibasic.CanFrame.Companion.computePayloadLengthCheksum
 
 @ExperimentalUnsignedTypes
 open class CommandModel {
     private var id: UByte
-    private var dlc: UByte
-    private var crc: UByte
+    private var payloadLength: UByte
+    private var payloadLengthChecksum: UByte
     private var data: UByteArray
 
     constructor(
         id: UByte,
-        dlc: UByte,
-        crc: UByte,
+        payloadLength: UByte,
+        payloadLengthChecksum: UByte,
         data: UByteArray
     ) {
         this.id = id
-        this.dlc = dlc
-        this.crc = crc
-        this.data = if (dlc.toInt() == data.count()) data else data.plus(
-            computeControlByte(
+        this.payloadLength = payloadLength
+        this.payloadLengthChecksum = payloadLengthChecksum
+        this.data = if (payloadLength.toInt() == data.count()) data else data.plus(
+            computeFrameLengthChceksum(
                 ubyteArrayOf(
                     id,
-                    dlc,
-                    crc
+                    payloadLength,
+                    payloadLengthChecksum
                 ).plus(data)
             )
         )
@@ -31,18 +32,18 @@ open class CommandModel {
 
     constructor(
         id: UByte,
-        dlc: UByte,
+        payloadLength: UByte,
         data: UByteArray
     ) {
         this.id = id
-        this.dlc = dlc
-        this.crc = (255 - dlc.toInt()).toUByte()
-        this.data = if (dlc.toInt() == data.count()) data else data.plus(
-            computeControlByte(
+        this.payloadLength = payloadLength
+        this.payloadLengthChecksum = computePayloadLengthCheksum(payloadLength.toInt())
+        this.data = if (payloadLength.toInt() == data.count()) data else data.plus(
+            computeFrameLengthChceksum(
                 ubyteArrayOf(
                     id,
-                    dlc,
-                    crc
+                    payloadLength,
+                    payloadLengthChecksum
                 ).plus(data)
             )
         )
@@ -53,18 +54,18 @@ open class CommandModel {
         data: UByteArray
     ) {
         this.id = id
-        this.dlc = data.count().toUByte()
-        this.crc = (255 - this.dlc.toInt()).toUByte()
+        this.payloadLength = data.count().toUByte()
+        this.payloadLengthChecksum = computePayloadLengthCheksum(payloadLength.toInt())
         this.data = data
     }
 
     val valid: Boolean
-        get() = (255 - dlc.toInt()) == crc.toInt() && dlc.toInt() == data.count() && data.last() == computeControlByte(
+        get() = computePayloadLengthCheksum(payloadLength.toInt()) == payloadLengthChecksum.toInt() && payloadLength.toInt() == data.count() && data.last() == computeFrameLengthChceksum(
             ubyteArrayOf(
                 id,
-                dlc,
-                crc
-            ).plus(data.copyOfRange(0, dlc.toInt() - 1))
+                payloadLength,
+                payloadLengthChecksum
+            ).plus(data.copyOfRange(0, payloadLength.toInt() - 1))
         )
 
     fun getId(): UByte {
@@ -75,20 +76,20 @@ open class CommandModel {
         this.id = id
     }
 
-    fun getDlc(): UByte {
-        return dlc
+    fun getPayloadpayloadLengthgth(): UByte {
+        return payloadLength
     }
 
-    fun setDlc(dlc: UByte) {
-        this.dlc = dlc
+    fun setPayloadpayloadLengthgth(payloadLength: UByte) {
+        this.payloadLength = payloadLength
     }
 
-    fun getCrc(): UByte {
-        return crc
+    fun getPayloadpayloadLengthgthChecksum(): UByte {
+        return payloadLengthChecksum
     }
 
-    fun setCrc(crc: UByte) {
-        this.crc = crc
+    fun setPayloadpayloadLengthgthChecksum(payloadLengthChecksum: UByte) {
+        this.payloadLengthChecksum = payloadLengthChecksum
     }
 
     fun getData(): UByteArray {
@@ -104,10 +105,10 @@ open class CommandModel {
     }
 
     fun getPayload(): UByteArray {
-        return data.copyOfRange(1, dlc.toInt() - 1)
+        return data.copyOfRange(1, payloadLength.toInt() - 1)
     }
 
-    fun getControlByte(): UByte {
+    fun getFramepayloadLengthgthChecksum(): UByte {
         return data.last()
     }
 
@@ -116,11 +117,11 @@ open class CommandModel {
     }
 
     fun toUByteArray(): UByteArray {
-        return ubyteArrayOf(id, dlc, crc).plus(data)
+        return ubyteArrayOf(id, payloadLength, payloadLengthChecksum).plus(data)
     }
 
     fun toCSVString(): String {
-        return "${id.toHex()};${dlc.toInt()};${crc.toHex()};${data.toHex()};${System.currentTimeMillis() / 1000}"
+        return "${id.toHex()};${payloadLength.toInt()};${payloadLengthChecksum.toHex()};${data.toHex()};${System.currentTimeMillis() / 1000}"
     }
 
     override fun toString(): String {
@@ -128,6 +129,6 @@ open class CommandModel {
     }
 
     companion object {
-        private var TAG = CommandModel::class.simpleName ?: ""
+        private var TAG = CommandModel::class.simppayloadLengthame ?: ""
     }
 }

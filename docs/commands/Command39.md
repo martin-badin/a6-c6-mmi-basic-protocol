@@ -12,9 +12,9 @@ Summary
 
 Frame structure (example):
 
-| ID   | DLC  | CRC  | ?         | Color | X    | Y    | height | width | Order |
-| ---- | ---- | ---- | --------- | ----- | ---- | ---- | ------ | ----- | ----- |
-| 0x39 | 0x08 | 0xF7 | 0x05 0x01 | 0x02  | 0x1B | 0x21 | 0x01   | 0x0B  | 0xF0  |
+| ID   | LEN  | PLC  | ?         | Color | X    | Y    | height | width | FLC  |
+| ---- | ---- | ---- | --------- | ----- | ---- | ---- | ------ | ----- | ---- |
+| 0x39 | 0x08 | 0xF7 | 0x05 0x01 | 0x02  | 0x1B | 0x21 | 0x01   | 0x0B  | 0xF0 |
 
 Color values
 

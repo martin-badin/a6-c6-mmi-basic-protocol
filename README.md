@@ -21,7 +21,7 @@ educational purposes).
 - `DisplayView.kt`, `loadScreen.kt` — display helpers / static screens
 - `data.csv` — captured or annotated data excerpts
 - `commands/` — individual command parsers/decoders (e.g. `Command31.kt`)
-- `docs/` — documentation (command reference, CAN frame CRC, etc.)
+- `docs/` — documentation (command reference, CAN frame, PLC, etc.)
 - `LICENSE` — project license
 
 ## Quick summary
@@ -45,7 +45,7 @@ hardware used to capture frames.
 ## Documentation
 
 - Command reference: `docs/commands.md` (index linking to per-command files)
-- CAN frame fields and CRC: `docs/canframe.md`
+- CAN frame fields and PLC: `docs/canframe.md`
 
 ## Contribution
 

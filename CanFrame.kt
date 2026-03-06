@@ -5,11 +5,11 @@ class CanFrame {
     companion object {
         var TAG = CanFrame::class.simpleName ?: ""
 
-        fun computeControlByte(bytes: UByteArray): UByte {
+        fun computeFrameLengthChceksum(bytes: UByteArray): UByte {
             return bytes.reduce { acc, byte -> acc.xor(byte) }
         }
 
-        fun computeCRC(dlc: UByte): UByte {
+        fun computePayloadLengthCheksum(dlc: UByte): UByte {
             return (0xFF.toUByte() - dlc).toUByte()
         }
     }

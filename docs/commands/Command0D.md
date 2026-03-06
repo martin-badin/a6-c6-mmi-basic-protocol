@@ -12,7 +12,7 @@ Summary
 
 Observed characteristics
 
-- Payload length: 1 byte (single UByte)
+- Data length: 1 byte (single UByte)
 - Semantics: the single byte appears to echo or acknowledge a previously
   requested block id (see `0x0A` requests in `example/data.csv`).
 
@@ -25,16 +25,16 @@ Typical sequence
 
 Frame structure (observed examples):
 
-| ID   | DLC  | CRC  | Payload | Order |
-| ---- | ---- | ---- | ------- | ----- |
-| 0x0D | 0x02 | 0xFD | 0x04    | 0xF6  |
+| ID   | LEN  | PLC  | Data | FLC  |
+| ---- | ---- | ---- | ---- | ---- |
+| 0x0D | 0x02 | 0xFD | 0x04 | 0xF6 |
 
 Notes & recommendations
 
 - Treat `0x0D` as a simple ACK / ready indicator when correlating host
   `0x0A` requests with incoming `0x31`/`0x39` payloads.
 - The ACK's single-byte payload is the useful value (block id). Other CAN
-  header bytes (DLC, CRC) follow transport conventions used elsewhere.
+  header bytes (LEN, PLC) follow transport conventions used elsewhere.
 
 See also
 
