@@ -20,6 +20,8 @@ educational purposes).
 - `CommandModel.kt` — common command model types and validation
 - `DisplayView.kt`, `loadScreen.kt` — display helpers / static screens
 - `data.csv` — captured or annotated data excerpts
+- `loadScreen.csv` — captured or annotated load screen data with test Audi
+  Multi Media Interface
 - `commands/` — individual command parsers/decoders (e.g. `Command31.kt`)
 - `docs/` — documentation (command reference, CAN frame, PLC, etc.)
 - `LICENSE` — project license
@@ -31,6 +33,7 @@ educational purposes).
   - `0x04` — resolution / display info
   - `0x31` — screen data (pixel blocks)
   - `0x39` — clear/area fill
+  - `0x55` — brightness
 
 ## Debugging / Hardware
 
