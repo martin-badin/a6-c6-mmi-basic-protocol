@@ -3,6 +3,8 @@
 This document is an index that links to the per-command documentation files.
 
 - [Command 04 — Display resolution / info](commands/Command04.md)
+- [Command 0A — Host request / block request](commands/Command0A.md)
+- [Command 0D — Acknowledge](commands/Command0D.md)
 - [Command 31 — Screen data (pixel blocks)](commands/Command31.md)
 - [Command 39 — Clear / fill area](commands/Command39.md)
 

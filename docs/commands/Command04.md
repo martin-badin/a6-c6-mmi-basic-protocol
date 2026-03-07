@@ -12,7 +12,7 @@ Summary
 
 Frame structure (observed examples):
 
-| ID   | LEN  | PLC  | ?                        | display height (80px) | display width (224px) | ?    | FLC  |
+| ID   | LEN  | PLC  | ?                        | display height (80px) | display width (224px) | ?    | CRC  |
 | ---- | ---- | ---- | ------------------------ | --------------------- | --------------------- | ---- | ---- |
 | 0x04 | 0x0B | 0xF4 | 0x02 0x53 0x10 0x31 0x30 | 0x00 0x50             | 0x00 0xE0             | 0x11 | 0x1A |
 

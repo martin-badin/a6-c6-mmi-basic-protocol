@@ -1,0 +1,16 @@
+{
+  "name": "@martin/example",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/bundle.js",
+  "scripts": {
+    "build": "esbuild src/index.ts --bundle --format=iife --global-name=mmi --outfile=dist/bundle.js --minify"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "esbuild": "^0.27.3",
+    "typescript": "^5.9.3"
+  }
+}

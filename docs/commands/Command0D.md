@@ -25,9 +25,9 @@ Typical sequence
 
 Frame structure (observed examples):
 
-| ID   | LEN  | PLC  | Data | FLC  |
-| ---- | ---- | ---- | ---- | ---- |
-| 0x0D | 0x02 | 0xFD | 0x04 | 0xF6 |
+| ID   | LEN  | PLC  | Data (example) | CRC  |
+| ---- | ---- | ---- | -------------- | ---- |
+| 0x0D | 0x02 | 0xFD | 0x04           | 0xF6 |
 
 Notes & recommendations
 

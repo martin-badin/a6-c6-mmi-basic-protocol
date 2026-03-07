@@ -1,6 +1,6 @@
 package com.mbadin.mmibasic.commands
 
-import com.mbadin.mmibasic.CanFrame.Companion.computeFrameLengthChceksum
+import com.mbadin.mmibasic.CanFrame.Companion.computeChecksum
 import com.mbadin.mmibasic.CommandModel
 
 // 55 04 FB 04 51 E0 1F
@@ -23,7 +23,7 @@ class Command55(data: UByteArray) : CommandModel(0x55.toUByte(), 0x04.toUByte(),
         if (data.count() == 1) {
             val aa = data.plus(brightness).plus(unknown)
 
-            setData(aa.plus(computeFrameLengthChceksum(ubyteArrayOf(getId(), getDlc(), getCrc()).plus(aa))))
+            setData(aa.plus(computeChecksum(ubyteArrayOf(getId(), getDlc(), getCrc()).plus(aa))))
         }
     }
 

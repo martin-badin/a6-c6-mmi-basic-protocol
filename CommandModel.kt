@@ -1,7 +1,7 @@
 package com.mbadin.mmibasic
 
-import com.mbadin.mmibasic.CanFrame.Companion.computeFrameLengthChceksum
-import com.mbadin.mmibasic.CanFrame.Companion.computePayloadLengthCheksum
+import com.mbadin.mmibasic.CanFrame.Companion.computeChecksum
+import com.mbadin.mmibasic.CanFrame.Companion.computePayloadLengthChecksum
 
 @ExperimentalUnsignedTypes
 open class CommandModel {
@@ -20,7 +20,7 @@ open class CommandModel {
         this.payloadLength = payloadLength
         this.payloadLengthChecksum = payloadLengthChecksum
         this.data = if (payloadLength.toInt() == data.count()) data else data.plus(
-            computeFrameLengthChceksum(
+            computeChecksum(
                 ubyteArrayOf(
                     id,
                     payloadLength,
@@ -37,9 +37,9 @@ open class CommandModel {
     ) {
         this.id = id
         this.payloadLength = payloadLength
-        this.payloadLengthChecksum = computePayloadLengthCheksum(payloadLength.toInt())
+        this.payloadLengthChecksum = computePayloadLengthChecksum(payloadLength.toInt())
         this.data = if (payloadLength.toInt() == data.count()) data else data.plus(
-            computeFrameLengthChceksum(
+            computeChecksum(
                 ubyteArrayOf(
                     id,
                     payloadLength,
@@ -55,12 +55,12 @@ open class CommandModel {
     ) {
         this.id = id
         this.payloadLength = data.count().toUByte()
-        this.payloadLengthChecksum = computePayloadLengthCheksum(payloadLength.toInt())
+        this.payloadLengthChecksum = computePayloadLengthChecksum(payloadLength.toInt())
         this.data = data
     }
 
     val valid: Boolean
-        get() = computePayloadLengthCheksum(payloadLength.toInt()) == payloadLengthChecksum.toInt() && payloadLength.toInt() == data.count() && data.last() == computeFrameLengthChceksum(
+        get() = computePayloadLengthChecksum(payloadLength.toInt()) == payloadLengthChecksum.toInt() && payloadLength.toInt() == data.count() && data.last() == computeChecksum(
             ubyteArrayOf(
                 id,
                 payloadLength,
@@ -108,7 +108,7 @@ open class CommandModel {
         return data.copyOfRange(1, payloadLength.toInt() - 1)
     }
 
-    fun getFramepayloadLengthgthChecksum(): UByte {
+    fun getChecksum(): UByte {
         return data.last()
     }
 
