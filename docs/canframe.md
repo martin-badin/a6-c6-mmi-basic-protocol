@@ -9,11 +9,13 @@ is in `CanFrame.kt`.
 1. `ID` — command identifier (first byte)
 2. `LEN` — data length code (second byte)
 3. `PLC` — payload length checksum (third byte)
-4. `DATA` - data bytes
+4. `PAYLOAD` - payload bytes
 5. `CRC` - checksum (last byte)
 
 In code the parse loop accesses bytes as: `id = bytes[0]`, `len = bytes[1]`,
-`plc = bytes[2]`, `data = bytes[3 .. 3 + dlc - 2]`, and then reads `crc = bytes[3 + dlc - 1]`.
+`plc = bytes[2]`, and `payload = bytes[3 .. 3 + len - 1]` (the `payload` array includes
+the frame's trailing checksum byte). The frame's CRC/checksum is the last
+byte of the `payload` array (equivalently `bytes[3 + len - 1]`).
 
 ## `PLC` (Payload Length Checksum)
 
@@ -21,4 +23,10 @@ In code the parse loop accesses bytes as: `id = bytes[0]`, `len = bytes[1]`,
 
 ## `CRC` (Checksum)
 
-- Algorithm: CRC = bytes.reduce((acc, byte) => acc ^ byte, 0);
+-- Algorithm: CRC is the XOR of all preceding frame bytes up to but excluding
+the CRC byte. Concretely: CRC = XOR(ID, LEN, PLC, PAYLOAD[0], PAYLOAD[1], ..., PAYLOAD[n-2]).
+
+In code this is implemented as a reduce/xor over the concatenation of
+`id`, `payloadLength`, `payloadLengthChecksum` and `payload[0 .. payloadLength-2]`.
+
+The `CommandModel` class verifies this value when computing `valid`.

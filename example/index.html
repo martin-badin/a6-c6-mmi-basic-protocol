@@ -76,6 +76,15 @@
                     "Processed Command 39 (fill/clear rectangles) in frame:",
                     frame,
                   );
+                } else if (id === "0x55") {
+                  const command = new Command55(frame);
+
+                  // fill/clear rectangles
+                  command.render(canvas, { scale: 3 });
+                  console.log(
+                    "Processed Command 55 (brightness) in frame:",
+                    frame,
+                  );
                 } else {
                   console.warn("Unknown command ID:", id, "in frame:", frame);
                 }
