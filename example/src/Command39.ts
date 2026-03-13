@@ -7,7 +7,16 @@ type Options = {
 };
 
 export class Command39 extends Command {
+  static readonly ID = "0x39";
   private payload: Uint8Array;
+
+  static readonly COLOR_RED = 0x00;
+  static readonly COLOR_BLACK = 0x02;
+
+  static readonly COLORS = {
+    RED: "#ff0000",
+    BLACK: "#000000",
+  } as const;
 
   constructor(frame: string[]) {
     super(frame);
@@ -52,7 +61,11 @@ export class Command39 extends Command {
     }
 
     const fillColor =
-      color === 0x00 ? "#ff0000" : color === 0x02 ? "#000000" : "#000000";
+      color === Command39.COLOR_RED
+        ? Command39.COLORS.RED
+        : color === Command39.COLOR_BLACK
+          ? Command39.COLORS.BLACK
+          : Command39.COLORS.BLACK;
     ctx.fillStyle = fillColor;
     ctx.fillRect(x * scale, y * scale, width * scale, height * scale);
   }

@@ -49,45 +49,44 @@
             parseCSV(e.target.result).forEach((frame, index) => {
               setTimeout(() => {
                 const id = frame[0];
-                if (id === "0x04") {
+                console.log("------- Processing frame with ID: -------", id);
+                if (id === Command04.ID) {
                   const command = new Command04(frame);
                   // Command 04 resets/defines display size -> clear and set background
                   command.render(canvas, { scale: 3 });
-                  console.log(
-                    "Processed Command 04 (display size) in frame:",
-                    frame,
-                  );
-                } else if (id === "0x31") {
+                } else if (id === Command31.ID) {
                   const command = new Command31(frame);
 
                   // draw pixel blocks (prefer external parser/renderer)
                   command.render(canvas, { scale: 3 });
-
-                  console.log(
-                    "Processed Command 31 (pixel blocks) in frame:",
-                    frame,
-                  );
-                } else if (id === "0x39") {
+                } else if (id === Command39.ID) {
                   const command = new Command39(frame);
 
                   // fill/clear rectangles
                   command.render(canvas, { scale: 3 });
-                  console.log(
-                    "Processed Command 39 (fill/clear rectangles) in frame:",
-                    frame,
-                  );
-                } else if (id === "0x55") {
+                } else if (id === Command55.ID) {
                   const command = new Command55(frame);
 
-                  // fill/clear rectangles
-                  command.render(canvas, { scale: 3 });
-                  console.log(
-                    "Processed Command 55 (brightness) in frame:",
-                    frame,
-                  );
+                  // brightness command
+                  command.render(canvas);
+                } else if (id === Command0D.ID) {
+                  const command = new Command0D(frame);
+
+                  // ACK command
+                  command.render();
+                } else if (id === Command0A.ID) {
+                  const command = new Command0A(frame);
+
+                  // request command
+                  command.render();
                 } else {
                   console.warn("Unknown command ID:", id, "in frame:", frame);
                 }
+
+                console.log(
+                  "------- Finished processing frame with ID: -------",
+                  id,
+                );
               }, index * 50);
             });
           };

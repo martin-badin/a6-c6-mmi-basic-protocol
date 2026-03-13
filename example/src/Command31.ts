@@ -7,7 +7,17 @@ type Options = {
 };
 
 export class Command31 extends Command {
+  static readonly ID = "0x31";
   private payload: Uint8Array;
+
+  static readonly COLOR_BOTH = 0x00;
+  static readonly COLOR_RED = 0x01;
+  static readonly COLOR_BLACK = 0x02;
+
+  static readonly COLORS = {
+    RED: "#ff0000",
+    BLACK: "#000000",
+  } as const;
 
   constructor(frame: string[]) {
     super(frame);
@@ -34,6 +44,16 @@ export class Command31 extends Command {
     const colorType = this.getColorType();
     const { x, y, height, width } = this.getDimensions();
 
+    if (
+      typeof colorType === "undefined" ||
+      typeof x === "undefined" ||
+      typeof y === "undefined" ||
+      typeof height === "undefined" ||
+      typeof width === "undefined"
+    ) {
+      throw new Error("Invalid Command 31 data");
+    }
+
     const bytes = this.payload.slice(7, this.payload.length); // exclude final PLC-like byte
 
     // number of byte-rows per column
@@ -42,9 +62,11 @@ export class Command31 extends Command {
     const ctx = canvas.getContext("2d");
 
     // helper to set one pixel (scaled rectangle)
-    function setPixel(px, py, color) {
-      ctx.fillStyle = color;
-      ctx.fillRect(px * scale, py * scale, scale, scale);
+    function setPixel(px: number, py: number, color: string) {
+      if (ctx) {
+        ctx.fillStyle = color;
+        ctx.fillRect(px * scale, py * scale, scale, scale);
+      }
     }
 
     // build columns
@@ -64,14 +86,14 @@ export class Command31 extends Command {
         const xPos = x + col;
         const yPos = y + row;
 
-        if (colorType === 0x00) {
+        if (colorType === Command31.COLOR_BOTH) {
           // both colors: '1' -> red, '0' -> black
-          if (bit === "1") setPixel(xPos, yPos, "#ff0000");
-          else setPixel(xPos, yPos, "#000000");
-        } else if (colorType === 0x01) {
-          if (bit === "1") setPixel(xPos, yPos, "#ff0000");
-        } else if (colorType === 0x02) {
-          if (bit === "1") setPixel(xPos, yPos, "#000000");
+          if (bit === "1") setPixel(xPos, yPos, Command31.COLORS.RED);
+          else setPixel(xPos, yPos, Command31.COLORS.BLACK);
+        } else if (colorType === Command31.COLOR_RED) {
+          if (bit === "1") setPixel(xPos, yPos, Command31.COLORS.RED);
+        } else if (colorType === Command31.COLOR_BLACK) {
+          if (bit === "1") setPixel(xPos, yPos, Command31.COLORS.BLACK);
         }
       }
     }

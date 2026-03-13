@@ -1,8 +1,6 @@
-function toByteArray(frame: string[]) {
-  return Uint8Array.from(
-    frame.map((x) => (typeof x === "string" ? parseInt(x, 16) : x)),
-  );
-}
+const toByteArray = (frame: string[]) => {
+  return Uint8Array.from(frame.map((x) => parseInt(x, 16)));
+};
 
 // | ID   | LEN  | PLC  | Data (example)           | CRC  |
 // | ---- | ---- | ---- | ------------------------ | ---- |
@@ -17,13 +15,31 @@ export class Command {
   isValid() {
     const length = this.getPayloadLength();
 
-    if (!length) {
+    if (length === undefined || length < 0) {
       throw new Error("Invalid payload length for Command 04");
     }
 
     if (this.frame.length != length + 3) {
       throw new Error("Frame too short for Command 04");
     }
+
+    if (this.getPayloadLengthChecksum() != (length ^ 0xff)) {
+      throw new Error("Invalid payload length checksum for Command 04");
+    }
+
+    if (this.getCRC() != this.calculateCRC()) {
+      throw new Error("Invalid CRC for Command 04");
+    }
+
+    console.info("Command is valid");
+
+    return true;
+  }
+
+  calculateCRC() {
+    return this.frame
+      .slice(0, this.frame.length - 1)
+      .reduce((crc, item) => crc ^ item, 0);
   }
 
   getID() {
@@ -38,10 +54,6 @@ export class Command {
     return this.frame[2];
   }
 
-  getCRC() {
-    return this.frame[this.frame.length - 1];
-  }
-
   getPayload() {
     const payloadLength = this.getPayloadLength();
 
@@ -50,5 +62,9 @@ export class Command {
     }
 
     return this.frame.slice(3, 3 + payloadLength - 1);
+  }
+
+  getCRC() {
+    return this.frame[this.frame.length - 1];
   }
 }

@@ -12,11 +12,8 @@ import { Command } from "./Command";
 // 55 04 FB 64 51 E0 7F
 // 55 04 FB 83 51 E0 98
 
-type Options = {
-  scale?: number;
-};
-
 export class Command55 extends Command {
+  static readonly ID = "0x55";
   private payload: Uint8Array;
 
   constructor(frame: string[]) {
@@ -25,11 +22,11 @@ export class Command55 extends Command {
     this.payload = this.getPayload();
   }
 
-  getBrightness(): number {
+  getBrightness() {
     return this.payload[1];
   }
 
-  render(canvas: HTMLCanvasElement, opts?: Options) {
+  render(canvas: HTMLCanvasElement) {
     this.isValid();
 
     const ctx = canvas.getContext("2d");
@@ -37,10 +34,10 @@ export class Command55 extends Command {
 
     const brightness = Math.max(0, Math.min(255, this.getBrightness()));
 
-    console.log("Rendering Command 55 with brightness:", brightness);
-
     // simple visual: fill the canvas with a gray level representing brightness
     // ctx.fillStyle = `rgb(${brightness},${brightness},${brightness})`;
     // ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    console.log("Command 55 - Set brightness:", brightness);
   }
 }

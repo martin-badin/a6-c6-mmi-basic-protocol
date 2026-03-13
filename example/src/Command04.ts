@@ -7,6 +7,7 @@ type Options = {
 };
 
 export class Command04 extends Command {
+  static readonly ID = "0x04";
   private payload: Uint8Array;
 
   constructor(frame: string[]) {
@@ -41,5 +42,7 @@ export class Command04 extends Command {
     // fill background (Command 04 indicates display size; default screen is black)
     ctx.fillStyle = "#000000";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    console.log("Command 04 - Set display size:", { width, height, scale });
   }
 }
