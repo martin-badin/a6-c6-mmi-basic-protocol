@@ -1,3 +1,4 @@
+import { ASCII } from "./ASCII";
 import { Command } from "./Command";
 
 // 0x31 0x0F 0xF0 0x0D 0x01 0x00 0xAE 0x02 0x07 0x07 0x7F 0x20 0x10 0x08 0x10 0x20 0x7F 0x66
@@ -38,6 +39,40 @@ export class Command31 extends Command {
     };
   }
 
+  // Convert the pixel bits in the payload into an ASCII table string.
+  toBitmap(bytes: Uint8Array, height: number, width: number) {
+    const count = Math.floor(bytes.length / width) || 0;
+
+    const maxRows = Math.min(height, count * 8);
+    const rows = Array.from({ length: maxRows }, () => "");
+
+    for (let col = 0; col < width; col++) {
+      const start = col * count;
+      let colBits = "";
+      for (let b = 0; b < count; b++) {
+        const byte = bytes[start + b] ?? 0;
+        let bin = byte.toString(2).padStart(8, "0");
+        bin = bin.split("").reverse().join("");
+        colBits += bin;
+      }
+
+      rows[col] = colBits;
+    }
+
+    return rows
+      .reduce<string[][]>((acc, row) => {
+        const rowBits = row.split("");
+
+        rowBits.forEach((bit, index) => {
+          acc[index] = acc[index] ?? [];
+          acc[index]?.push(bit);
+        });
+
+        return acc;
+      }, [])
+      .map((rowBits) => rowBits.join(""));
+  }
+
   render(canvas: HTMLCanvasElement, opts?: Options) {
     this.isValid();
 
@@ -55,6 +90,8 @@ export class Command31 extends Command {
     }
 
     const bytes = this.payload.slice(7, this.payload.length); // exclude final PLC-like byte
+
+    ASCII.bitmapToChar(this.toBitmap(bytes, height, width));
 
     // number of byte-rows per column
     const count = Math.floor(bytes.length / width) || 0;

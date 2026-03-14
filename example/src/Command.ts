@@ -31,8 +31,6 @@ export class Command {
       throw new Error("Invalid CRC for Command 04");
     }
 
-    console.info("Command is valid");
-
     return true;
   }
 
