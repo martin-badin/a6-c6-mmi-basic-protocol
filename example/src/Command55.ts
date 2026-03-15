@@ -23,7 +23,7 @@ export class Command55 extends Command {
   }
 
   getBrightness() {
-    return this.payload[1];
+    return this.payload[1] ?? 0;
   }
 
   render(canvas: HTMLCanvasElement) {

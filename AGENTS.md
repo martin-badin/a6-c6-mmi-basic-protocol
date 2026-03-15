@@ -46,3 +46,25 @@ Example CLI (pseudo-steps)
 If you'd like, I can create a starter script (`scripts/generate-command-docs.js`)
 that parses `example/data.csv` and emits command markdown files using this
 template. Tell me whether you prefer Node.js or Python.
+
+Repository command implementations and docs
+
+- The repository already contains implementations and docs for several commands.
+- Source implementations: `example/src/Command04.ts`, `example/src/Command0A.ts`,
+  `example/src/Command0D.ts`, `example/src/Command31.ts`, `example/src/Command39.ts`,
+  and `example/src/Command55.ts`.
+- Generated/handwritten docs: `docs/commands/Command04.md`, `docs/commands/Command0A.md`,
+  `docs/commands/Command0D.md`, `docs/commands/Command31.md`, `docs/commands/Command39.md`,
+  and `docs/commands/Command55.md`.
+
+Suggested small workflow tuned to this repo
+
+1. Run the collector against `example/data.csv` to gather frames by command ID.
+2. For each observed ID, prefer reusing the existing parser in `example/src/CommandXX.ts`.
+3. Emit a `docs/commands/CommandXX.md` using the template above and include a
+   reference to the corresponding implementation file.
+4. Manually review generated docs for field names, endianness, and semantics.
+
+If you want, I can scaffold the generator script (Node.js or Python) and wire it
+to produce files in `docs/commands/` using the existing `example/src/` parsers
+as examples.

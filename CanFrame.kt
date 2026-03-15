@@ -2,18 +2,6 @@ package com.mbadin.mmibasic
 
 @ExperimentalUnsignedTypes
 class CanFrame {
-    companion object {
-        var TAG = CanFrame::class.simpleName ?: ""
-
-        fun computeChecksum(bytes: UByteArray): UByte {
-            return bytes.reduce { acc, byte -> acc.xor(byte) }
-        }
-
-        fun computePayloadLengthChecksum(dlc: UByte): UByte {
-            return (0xFF.toUByte() - dlc).toUByte()
-        }
-    }
-
     private var rest = ubyteArrayOf()
 
     fun parse(bytes: UByteArray): Array<CommandModel> {
