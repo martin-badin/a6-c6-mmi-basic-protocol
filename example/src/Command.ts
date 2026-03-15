@@ -16,19 +16,19 @@ export class Command {
     const length = this.getPayloadLength();
 
     if (length === undefined || length < 0) {
-      throw new Error("Invalid payload length for Command 04");
+      throw new Error("Invalid payload length");
     }
 
     if (this.frame.length != length + 3) {
-      throw new Error("Frame too short for Command 04");
+      throw new Error("Frame too short");
     }
 
     if (this.getPayloadLengthChecksum() != (length ^ 0xff)) {
-      throw new Error("Invalid payload length checksum for Command 04");
+      throw new Error("Invalid payload length checksum");
     }
 
     if (this.getCRC() != this.calculateCRC()) {
-      throw new Error("Invalid CRC for Command 04");
+      throw new Error("Invalid CRC");
     }
 
     return true;
