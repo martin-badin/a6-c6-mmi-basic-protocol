@@ -28,5 +28,3 @@ the CRC byte. Concretely: CRC = XOR(ID, LEN, PLC, PAYLOAD[0], PAYLOAD[1], ..., P
 
 In code this is implemented as a reduce/xor over the concatenation of
 `id`, `payloadLength`, `payloadLengthChecksum` and `payload[0 .. payloadLength-2]`.
-
-The `CommandModel` class verifies this value when computing `valid`.
