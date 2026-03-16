@@ -1,4 +1,3 @@
-```markdown
 # Command ID 0D — Acknowledge (ACK)
 
 Short description
@@ -22,6 +21,12 @@ Fields
 
 - Acknowledged block id: single payload byte echoing the requested block id.
 
+Note: host->device request frames include an order/sequence byte at the
+4th byte of the full frame (`bytes[3]`) which appears as `payload[0]` in
+the local payload indexing. The `0x0D` ACK echoes the requested block
+id in its `payload[0]` (i.e. the same value sent by the host in the
+4th frame byte).
+
 Behavior & correlation
 
 - Typical sequence: host sends `0x0A` (request) → device replies `0x0D` (ACK) →
@@ -32,9 +37,3 @@ See also
 
 - [docs/commands/Command0A.md](docs/commands/Command0A.md) — host block requests
 - [docs/commands/Command31.md](docs/commands/Command31.md) — pixel block payloads
-
-Notes
-
-- Optionally add a parser helper (`commands/Command0D.kt` / JS) to extract the
-  acknowledged block id and annotate captured streams.
-```

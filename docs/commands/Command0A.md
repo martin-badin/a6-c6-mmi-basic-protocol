@@ -1,4 +1,3 @@
-```markdown
 # Command ID 0A — Host request / block request
 
 Frames where the host requests a display/content block from the device.
@@ -31,6 +30,11 @@ Parsing / rendering notes
 - Typical sequence in capture: `to 0x0A (request N)` → `from 0x0D (ACK N)` → `from (0x31|0x39|0x55|0x53|0x3F) (N ... )` where the device sends content for block N.
 - Implementation tip: expose `mode` and `params` in your parser to help correlate requests with multi-frame responses.
 
+- Note: host->device frames include an order/sequence byte at the 4th
+  byte of the full frame (i.e. `bytes[3]`), which is `payload[0]` in the
+  payload-indexing used in these docs. This byte is commonly used to
+  correlate requests and subsequent device replies.
+
 Notes & tips
 
 - Some device responses contain large payloads split across frames — use the block id to join related frames.
@@ -40,4 +44,3 @@ See also
 
 - [docs/commands/Command0D.md](docs/commands/Command0D.md) — device ACKs for requested blocks
 - [docs/commands/Command31.md](docs/commands/Command31.md) — pixel block payloads
-```

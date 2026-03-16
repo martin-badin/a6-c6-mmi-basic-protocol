@@ -138,14 +138,10 @@ export class ASCII {
       }
     }
 
-    return "?";
+    return "█";
   }
 
   static bitmapToChar(bitmap: Bitmap) {
-    const char = new ASCII().bitmapToAscii(bitmap);
-
-    if (char === "?") {
-      console.warn("No matching character found for bitmap:", bitmap);
-    }
+    return new ASCII().bitmapToAscii(bitmap);
   }
 }

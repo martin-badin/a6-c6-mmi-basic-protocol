@@ -36,6 +36,13 @@ Fields
 - Height: `payload[5]` — rectangle height in pixels (single byte).
 - Width: `payload[6]` — rectangle width in pixels (single byte).
 
+Note: when a frame is sent from the host (`to` in captures) the first
+payload byte is commonly used as an order/sequence value. Concretely the
+order byte is the 4th byte of the full frame (`bytes[3]`) and appears as
+`payload[0]` in the local payload indexing used in these docs. For
+device->host frames (the majority of observed `0x39` examples) `payload[0]`
+remains the first payload/header byte.
+
 Notes & tips
 
 - Use color semantics consistently with `0x31` rules for multi-layer
@@ -43,6 +50,5 @@ Notes & tips
 
 See also
 
-- `commands/Command39.kt` — parsing & implementation details
 - [docs/commands/Command31.md](docs/commands/Command31.md) — pixel-block frames
   with bitmap payloads

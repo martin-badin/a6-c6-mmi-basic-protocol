@@ -47,6 +47,10 @@ Notes & tips
   produce vertically misaligned pixels.
 - Correlate `0x31` frames with `0x0A`/`0x0D` when identifying which host
   request triggered the block transfer.
+- Note: host->device (`to`) frames include an order/sequence byte at the
+  4th byte of the full frame (`bytes[3]`), which is `payload[0]` in the
+  local payload indexing. Use this order byte when correlating requests
+  (`0x0A`) with subsequent `0x31` block transfers.
 - Compute column count dynamically from `bytes.length / width` rather than
   assuming fixed column sizes.
 
@@ -56,6 +60,5 @@ Example decode (brief)
 
 See also
 
-- `commands/Command31.kt` — parsing implementation in this repository
 - [docs/commands/Command0A.md](docs/commands/Command0A.md) — host block request
 - [docs/commands/Command0D.md](docs/commands/Command0D.md) — device ACK for requested block

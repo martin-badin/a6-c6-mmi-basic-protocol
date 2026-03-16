@@ -15,14 +15,13 @@ tools to emulate or replace the OEM display for research and education.
 
 ## What’s in this repository
 
-- `CanFrame.kt` — CAN frame parsing and helpers
-- `USBDevice.kt` — UART/CAN helper for logging and test harnesses
+- CAN frame parsing and helpers — see `docs/canframe.md`
+- UART/CAN helper for logging and test harnesses — see `example/src/`
 - `example/data.csv` — captured examples
 - `example/loadScreen.csv` — author-generated load screen data (this screen is not produced by the MMI head unit; it is implemented directly in the display unit)
 - `example/src/` — example parsers and command implementations (`Command04.ts`, `Command0A.ts`, `Command0D.ts`, `Command31.ts`, `Command39.ts`, `Command55.ts`)
 - `docs/` — documentation (command reference, CAN frame, PLC, and per-command docs)
 - `resources/` — images and screenshots used by the README and tests
-- `scripts/` — helper scripts (data processing, conversion)
 - `LICENSE` — project license
 
 ## Quick summary
@@ -33,7 +32,7 @@ tools to emulate or replace the OEM display for research and education.
 ## Debugging / Hardware
 
 The capture setup uses a UART→USB converter to tap the CAN-to-UART output from
-the display module. Converter settings and helper code live in `USBDevice.kt`.
+the display module. Converter settings and helper code are available in `example/src/`.
 
 ## Documentation
 

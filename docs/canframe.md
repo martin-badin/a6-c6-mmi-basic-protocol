@@ -1,8 +1,9 @@
 # CAN frame fields
 
 This document describes the `ID`, `LEN`, `PLC`, `DATA`, and `CRC` fields used by the
-project's frame format and explains how the PLC is computed. The implementation
-is in `CanFrame.kt`.
+project's frame format and explains how the PLC is computed. No single
+reference implementation is included in this repository; see the parser
+notes in this document and the example parsers in `example/src/`.
 
 ## Frame layout (byte order)
 
@@ -16,6 +17,12 @@ In code the parse loop accesses bytes as: `id = bytes[0]`, `len = bytes[1]`,
 `plc = bytes[2]`, and `payload = bytes[3 .. 3 + len - 1]` (the `payload` array includes
 the frame's trailing checksum byte). The frame's CRC/checksum is the last
 byte of the `payload` array (equivalently `bytes[3 + len - 1]`).
+
+Note: for host->device frames (marked "to" in captures) the frame's
+"order" or sequence byte appears as the 4th byte of the full frame
+(i.e. `bytes[3]`). In the local payload indexing used throughout the
+docs this corresponds to `payload[0]`. Many host commands place an
+order/sequence value here to help correlate requests and device replies.
 
 ## `PLC` (Payload Length Checksum)
 

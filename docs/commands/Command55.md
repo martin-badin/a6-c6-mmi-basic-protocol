@@ -35,6 +35,12 @@ Fields
 - `payload[1]` — brightness value (0–255). The repository parser exposes this via `getBrightness()`.
 - `payload[2]` — unknown constant, typically `0xE0` in captures.
 
+Note: `0x55` is observed as a host->device setting command. In this
+capture format the order/sequence byte occupies the 4th byte of the full
+frame (`bytes[3]`) and therefore appears as `payload[0]` in the local
+payload indexing used in these docs. When constructing `0x55` frames set
+`payload[0]` (the 4th frame byte) to the desired order/subcommand value.
+
 Parsing / implementation notes
 
 - In this codebase the `Command55` implementation constructs or parses a 3-byte payload: subcommand, brightness, unknown. The provided helper `getBrightness()` returns `payload[1]`.
@@ -45,7 +51,3 @@ Notes & tips
 - The middle byte is the effective brightness parameter in observed captures; try varying it across the full 0–255 range to map device response.
 - The trailing `0xE0` byte appears constant across captures; it may be a flags/marker byte.
 - If you need to construct frames programmatically, prefer passing the full 3-byte payload so the produced frame matches captured examples.
-
-See also
-
-- [commands/Command55.kt](commands/Command55.kt#L1) — parsing/constructor logic in repository

@@ -1,4 +1,3 @@
-```markdown
 # Command ID 04 — Display resolution / info
 
 Short description
@@ -33,7 +32,5 @@ Notes & tips
 
 See also
 
-- `commands/Command04.kt` — parsing implementation in this repository
 - [docs/commands/Command31.md](docs/commands/Command31.md) — pixel-block frames
   that depend on display geometry
-```

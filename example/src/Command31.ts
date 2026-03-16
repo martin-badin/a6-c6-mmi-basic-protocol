@@ -91,7 +91,17 @@ export class Command31 extends Command {
 
     const bytes = this.payload.slice(7, this.payload.length); // exclude final PLC-like byte
 
-    ASCII.bitmapToChar(this.toBitmap(bytes, height, width));
+    const char = ASCII.bitmapToChar(this.toBitmap(bytes, height, width));
+
+    if (char === "█") {
+      console.warn(
+        "No matching ASCII character found for bitmap, rendering as block:",
+        {
+          bitmap: this.toBitmap(bytes, height, width),
+          raw: this.toRawArray(bytes),
+        },
+      );
+    }
 
     // number of byte-rows per column
     const count = Math.floor(bytes.length / width) || 0;
